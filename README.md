@@ -35,9 +35,6 @@ Start Attero:
 python3 manage.py runserver
 ```
 
-## About Attero
-Serpico is at its core a report generation tool but targeted at creating information security reports. When building a report the user adds "findings" from the template database to the report. When there are enough findings, click 'Generate Report' to create the docx with your findings. The docx design comes from a Report Template which can be added through the UI; a default one is included. The Report Templates use a custom Markup Language to stub the data from the UI (i.e. findings, customer name, etc) and put them into the report.
-
 ## Features
 
 * Simple project management system
