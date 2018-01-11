@@ -1,0 +1,4 @@
+{% for project in projects %}
+<li><a href="{% url "project-update" pk=project.id %}"><i class="fa fa-briefcase fa-fw"></i> {{ project.title }} ({{project.short_name}})</a></li>
+{% endfor %}
+

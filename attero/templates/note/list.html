@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}List Notes{% endblock %}
+
+{% block content %}
+{% load custom_tags %}
+
+<table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+	<thead>
+	<tr>
+		<th>Title</th>
+		<th>Client</th>
+		<th>Project</th>
+	</tr>
+	</thead>
+	<tbody>
+	{% for note in object_list %}
+	<tr>
+		<td class="title"><a href="{% url "note-update" pk=note.id %}">{{ note.title }}</a></td>
+		<td>{{note.project.client_name}}</td>
+		<td>{{note.project.title}}</td>
+	</tr>
+	{% endfor %}
+	</tbody>
+</table>
+
+{% endblock %}

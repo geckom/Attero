@@ -1,0 +1,4 @@
+django
+summernote
+mptt
+django-guardian

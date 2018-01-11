@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Tasks{% endblock %}
+
+
+{% block submenu %}
+{% if project_id %}
+                         <div class="pull-right">
+                                <div class="btn-group">
+					<a href="{% url "project-task-add" project_id=project_id %}" class="btn btn-default"><i class="fa fa-plus-circle"></i> Add Task</a>
+                                    </button>
+                                </div>
+                            </div>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+
+{% load mptt_tags %}
+<ul class="root">
+    {% recursetree tasks %}
+        <li>
+		{% if node.complete == True %}
+			<input type="checkbox" checked>
+		{% else %}
+			<input type="checkbox">
+		{% endif %}
+		{{node.project.title}} | 
+		{{ node.name }} <a href='{% url "project-task-update" project_id=node.project.id task_id=node.id %}'><i class="fa fa-edit fa-fw"></i></a> 
+            {% if not node.is_leaf_node %}
+                <ul class="children">
+                    {{ children }}
+                </ul>
+            {% endif %}
+        </li>
+    {% endrecursetree %}
+</ul>
+
+
+{% endblock %}

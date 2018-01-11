@@ -1,0 +1,14 @@
+{% block content %}
+
+<h1>{{project.title}}</h1>
+<h2><i>Company: {{project.client_name}} ({{project.short_name}})</i></h2>
+
+<hr />
+
+{% for note in notes %}
+<h2>{{note.title}}</h2>
+{{note.note|safe}}
+<hr />
+{% endfor %}
+
+{% endblock %}

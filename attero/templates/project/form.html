@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if object.id %}Edit{% else %}Add{% endif %} Project
+{% endblock %}
+
+
+
+{% block content %}
+{% load custom_tags %}
+<form role="form" method="post" action="{{ action }}">
+	{% csrf_token %}
+	{% if form.non_field_errors %}
+	<ul>
+		{% for error in form.non_field_errors %}
+		<li>{{ error }}</li>
+		{% endfor %}
+	</ul>
+	{% endif %}
+	{% for field in form %}
+		<div class="form-group">
+			<div>
+				{{ field.label_tag }} {{ field|addclass:'form-control' }}
+			</div>
+			<div id="{{ field.auto_id }}_errors">
+				{{ field.errors }}
+			</div>
+		</div>
+	{% endfor %}
+	<button type="submit" class="btn btn-success">Save</button>
+	{% if project_id %}
+	<a href="{% url "project-delete" project_id=project_id %}" class="btn btn-danger" role="button">Delete</a>
+	{% endif %}
+
+</form>
+{% endblock %}

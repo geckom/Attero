@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if latest_note_list %}
+    <ul>
+    {% for note in latest_note_list %}
+	<li><a href="{% url 'detail' note.id %}">{{ note.title_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No notes are available.</p>
+{% endif %}
+{% endblock %}
