@@ -1,3 +1,4 @@
 django-summernote
 django-mptt
 django-guardian
+django-bootstrap3
