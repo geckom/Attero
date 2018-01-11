@@ -2,9 +2,7 @@
 
 ## Unstable pre-alpha software - Not not use on production systems
 
-.. image:: https://secure.travis-ci.org/geckom/Attero.png?branch=master
-    :alt: Build Status
-    :target: https://travis-ci.org/geckom/Attero
+[![Build Status](https://travis-ci.org/geckom/Attero.svg?branch=master)](https://travis-ci.org/geckom/Attero)
 
 ### A report writing and collaboration tool for infosec
 Attero is a note taking, report generating, collaboration and management tool designed primary for pentetration testing and red team engagements.
