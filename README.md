@@ -27,7 +27,7 @@ python3 manage.py migrate
 
 And then create the administration user:
 ```
-python3 manage.py createsuperuse
+python3 manage.py createsuperuser
 ```
 
 Start Attero:

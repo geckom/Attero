@@ -1,0 +1,6 @@
+language: python
+env:
+  - DJANGO_VERSION=2.0.1
+install:
+  - pip install -q Django==$DJANGO_VERSION
+  - pip install --user -r requirements.txt
