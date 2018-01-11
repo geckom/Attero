@@ -5,4 +5,4 @@ env:
   - DJANGO_VERSION=2.0
 install:
   - pip install -q Django==$DJANGO_VERSION
-  - pip install --user -r requirements.txt
+  - pip install -r requirements.txt
