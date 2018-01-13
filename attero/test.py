@@ -19,7 +19,7 @@ def create_project(title, client_name, short_name, status):
 class ProjectListTests(TestCase):
     def test_no_projects(self):
         """
-        If no questions exist, an appropriate message is displayed.
+        If no projects exist, an appropriate message is displayed.
         """
         test_user1 = User.objects.create_user(username='testuser1', password='12345')
         test_user1.save()
