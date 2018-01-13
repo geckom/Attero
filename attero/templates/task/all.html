@@ -18,6 +18,9 @@
 
 
 {% load mptt_tags %}
+{% if tasks.count == 0 %}
+No tasks are available.
+{% else %}
 <ul class="root">
     {% recursetree tasks %}
         <li>
@@ -36,6 +39,5 @@
         </li>
     {% endrecursetree %}
 </ul>
-
-
+{% endif %}
 {% endblock %}
