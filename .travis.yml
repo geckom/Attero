@@ -9,6 +9,6 @@ install:
   - pip install -r requirements.txt
   - pip install codecov coverage
 script:
-  - python manage.py test attero
+  - coverage run manage.py test
 after_success: 
   - codecov
