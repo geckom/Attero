@@ -49,3 +49,13 @@ python3 manage.py runserver
 
 * Task management system per project
 
+## Work in progress
+
+[x] Create basic project system
+[x] Setup basic template
+[x] Setup User management system
+[x] Setup project object based permissions
+[x] Create note system (tree structured)
+[x] Create task system (tree structured)
+[ ] Update menu styling (for in-project pages)
+[ ] Create nmap import feature
