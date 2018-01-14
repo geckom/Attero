@@ -23,7 +23,7 @@ class Project(models.Model):
     
     class Meta:
         permissions = (
-            ('view_Project', 'Can view Project'),
+            ('view_project', 'Can view Project'),
         )
 
 

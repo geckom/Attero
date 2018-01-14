@@ -35,6 +35,13 @@ from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from guardian.shortcuts import assign_perm
+from guardian.shortcuts import get_objects_for_user
+from guardian.mixins import PermissionRequiredMixin, PermissionListMixin
+
+
+
+
 def Home(request):
     template = loader.get_template('pages/home.html')
     context = {}
@@ -43,13 +50,19 @@ def Home(request):
 
 @login_required(login_url="login")
 def Dashboard(request):
-    open_projects = Project.objects.filter(status="open")
-    open_notes = Note.objects.filter(project__status="open")
-    latest_notes = Note.objects.order_by('updated')[:5]
-    completed_tasks = Task.objects.filter(complete=True)
-    incomplete_tasks = Task.objects.filter(complete=False)
-    completed_projects = Project.objects.filter(status="closed").count
-    latest_tasks = Task.objects.order_by('updated')[:5]
+    open_projects = get_objects_for_user(request.user, 'attero.view_project').filter(status="open")
+    completed_projects= get_objects_for_user(request.user, 'attero.view_project').filter(status='closed').count
+
+    open_notes = Note.objects.filter(project__in=open_projects)
+    #latest_notes = Note.objects.filter(project__in=open_projects).order_by('updated')[:5]
+    latest_notes = open_notes.order_by('updated')[:5]
+
+    completed_tasks = Task.objects.filter(project__in=open_projects, complete=True)
+    #completed_tasks = Task.objects.filter(complete=True)
+    #incomplete_tasks = Task.objects.filter(complete=False)
+    incomplete_tasks = Task.objects.filter(project__in=open_projects, complete=False)
+    #latest_tasks = Task.objects.order_by('updated')[:5]
+    latest_tasks = Task.objects.filter(project__in=open_projects).order_by('updated')[:5]
 
     context = {
             'open_projects' : open_projects,
@@ -130,9 +143,12 @@ class IndexView(generic.ListView):
 
 
 #@login_required(login_url="login")
-class ProjectList(LoginRequiredMixin, ListView):
+class ProjectList(LoginRequiredMixin, PermissionListMixin, ListView):
+    permission_required = 'attero.view_project'
     template_name = "project/list.html"
     model = Project
+    #projects = get_objects_for_user(request.user, 'projects.view_project')
+    
 
 class ProjectCreate(LoginRequiredMixin, CreateView):
     template_name = "project/form.html"
@@ -141,6 +157,8 @@ class ProjectCreate(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('project-list')
     def form_valid(self, form):
         form.instance.created_by = self.request.user
+        project = form.save()
+        assign_perm('view_project', self.request.user, project)
         return super().form_valid(form)
 
 class ProjectUpdate(LoginRequiredMixin, UpdateView):
