@@ -29,8 +29,14 @@
 	{% endfor %}
 	<button type="submit" class="btn btn-success">Save</button>
 	{% if project_id %}
-	<a href="{% url "project-delete" project_id=project_id %}" class="btn btn-danger" role="button">Delete</a>
+	<a href="{% url "project-delete" project_id=project_id %}" class="btn btn-danger" role="button" onclick="areyousure(event)">Delete</a>
 	{% endif %}
 
 </form>
+<script type="text/javascript">
+function areyousure(e)
+{
+    if(!confirm('Are you sure you want to delete this project?'))e.preventDefault();
+}
+</script>
 {% endblock %}
