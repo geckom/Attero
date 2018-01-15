@@ -6,6 +6,8 @@ from django.urls import reverse
 
 from django.contrib.auth.models import User
 
+from guardian.shortcuts import assign_perm
+
 from .models import Project, Note, Task
 
 
@@ -78,6 +80,10 @@ class ProjectListTests(TestCase):
 	# Loing and goto the project list page
         test_user1 = User.objects.create_user(username='testuser1', password='12345')
         test_user1.save()
+
+        # Add permissions
+        assign_perm('view_project', test_user1, test_project)
+
         login = self.client.login(username='testuser1', password='12345')
         resp = self.client.get(reverse('project-list'))
 
