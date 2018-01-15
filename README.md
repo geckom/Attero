@@ -9,6 +9,10 @@
 ### A note taking tool for infosec
 Attero is a note taking, report generating, collaboration and management tool designed primary for pentetration testing and red team engagements.
 
+## Screenshots
+
+![Dashboard](https://raw.githubusercontent.com/geckom/Attero/master/screenshots/dashboard.png)
+
 ## Installation
 
 The installation:
