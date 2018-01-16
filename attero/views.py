@@ -25,6 +25,7 @@ from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
 from .models import Note
 from .models import Project
 from .models import Task
+from .models import ReportTemplate
 
 from .forms import NoteForm
 from .forms import TaskForm
@@ -153,7 +154,7 @@ class ProjectList(LoginRequiredMixin, PermissionListMixin, ListView):
 class ProjectCreate(LoginRequiredMixin, CreateView):
     template_name = "project/form.html"
     model = Project
-    fields = ['title', 'client_name', 'short_name', 'status']
+    fields = ['title', 'client_name', 'short_name', 'status', 'report_template']
     success_url = reverse_lazy('project-list')
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -164,7 +165,7 @@ class ProjectCreate(LoginRequiredMixin, CreateView):
 class ProjectUpdate(LoginRequiredMixin, UpdateView):
     template_name = "project/form.html"
     model = Project
-    fields = ['title', 'client_name', 'short_name', 'status']
+    fields = ['title', 'client_name', 'short_name', 'status', 'report_template']
     success_url = reverse_lazy('project-list')
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
@@ -180,6 +181,52 @@ def ProjectDelete(request, project_id):
     project.delete()
     messages.success(request, 'Your project was successfully delete!')
     return HttpResponseRedirect(reverse('project-list'))
+
+
+
+
+
+
+
+
+class ReportTemplateList(LoginRequiredMixin, ListView):
+    template_name = "report_template/list.html"
+    model = ReportTemplate
+    #projects = get_objects_for_user(request.user, 'projects.view_project')
+    
+
+class ReportTemplateCreate(LoginRequiredMixin, CreateView):
+    template_name = "report_template/form.html"
+    model = ReportTemplate
+    fields = ['name', 'document']
+    success_url = reverse_lazy('report-template-list')
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        object = form.save()
+        return super().form_valid(form)
+
+class ReportTemplateUpdate(LoginRequiredMixin, UpdateView):
+    template_name = "report_template/form.html"
+    model = ReportTemplate
+    fields = ['name', 'document']
+    success_url = reverse_lazy('report-template-list')
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        #context['project_id'] = 3
+        return context
+
+@login_required(login_url="login")
+def ReportTemplateDelete(request, report_template_id):
+    reporttemplate = ReportTemplate.objects.get(id=report_template_id)
+    #note = get_object_or_404(Project, pk=note_id)
+    reporttemplate.delete()
+    messages.success(request, 'Your project was successfully delete!')
+    return HttpResponseRedirect(reverse('report-template-list'))
+
+
+
 
 
 
@@ -296,17 +343,60 @@ def ProjectTaskDelete(request, project_id, note_id):
 
 
 
-
-
+from docxtpl import *
+import re
+from django.conf import settings
 
 
 @login_required(login_url="login")
 def ProjectReport(request, project_id):
     project = Project.objects.get(id=project_id)
     notes = Note.objects.filter(project=project, report=True)
-    return render(request, 'project/report.html', { 'project': project, 'notes': notes })
+
+    if project.report_template == None:
+        return render(request, 'project/report.html', { 'project': project, 'notes': notes })
+
+    doc = DocxTemplate(project.report_template.document)
 
 
+    docnotes = []
+    for note in notes:
+        startsentence = note.note
+	
+        latexbold = re.compile(r'\<b\>(.*)\<\/b\>')
+        x = re.split(latexbold, startsentence.replace('<p>','').replace('</p>',"\n\n"))
+        rt = RichText()
+        l = len(x)
+        for i in range(0,l):
+            if i%2 == 0:
+                rt.add(x[i])
+            else:
+                rt.add(x[i], bold=True)
+
+
+        docnotes.append({
+		'title': note.title,
+		'note':  rt
+	})
+
+
+    context = {
+            'title' : project.title,
+            'company_name' : "World company",
+            'notes' : docnotes
+    }
+
+    file_path = os.path.join(settings.MEDIA_ROOT, "generated_doc.docx")
+
+    doc.render(context)
+    doc.save(file_path)
+
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
+            response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+            return response
+    raise Http404
 
 
 

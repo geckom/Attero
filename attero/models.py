@@ -5,10 +5,19 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+class ReportTemplate(models.Model):
+    name = models.CharField(max_length=255)
+    document = models.FileField(upload_to='report_templates/')
+    added = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
 class Project(models.Model):
     STATUS_CHOICES = (
         ('open', 'Open'),
-        ('closed', 'closed')
+        ('closed', 'Closed')
     )
 
     title = models.CharField(max_length=255)
@@ -17,6 +26,7 @@ class Project(models.Model):
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='open')
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    report_template = models.ForeignKey(ReportTemplate, on_delete=models.DO_NOTHING, null=True)
 
     def __str__(self):
         return self.title
@@ -56,4 +66,7 @@ class Task(MPTTModel):
 
     class MPTTMeta:
         order_insertion_by = ['name']
+
+
+
 

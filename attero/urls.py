@@ -15,6 +15,11 @@ urlpatterns = [
     path('dashboard' , views.Dashboard, name='dashboard'),
 
     path('tasks', views.TaskList, name='task-list'),
+
+    path('reporttemplate', views.ReportTemplateList.as_view(), name='report-template-list'),
+    path('reporttemplate/add/', views.ReportTemplateCreate.as_view(), name='report-template-add'),
+    path('reporttemplate/<int:pk>/', views.ReportTemplateUpdate.as_view(), name='report-template-update'),
+    path('reporttemplate/<int:report_template_id>/delete', views.ReportTemplateDelete, name='report-template-delete'),
     
     path('projects', views.ProjectList.as_view(), name='project-list'),
     path('project/add/', views.ProjectCreate.as_view(), name='project-add'),

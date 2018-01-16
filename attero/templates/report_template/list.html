@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}List Report Templates{% endblock %}
+
+{% block content %}
+{% load custom_tags %}
+
+<table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+	<thead>
+	<tr>
+		<th>Name</th>
+	</tr>
+	</thead>
+	<tbody>
+	{% if object_list.count == 0 %}
+	<tr><td colspan="4">No projects are available.</td></tr>
+	{% else %}
+	{% for report_template in object_list %}
+	<tr>
+		<td class="name"><a href="{% url "report-template-update" pk=report_template.id %}">{{ report_template.name }}</a></td>
+	</tr>
+	{% endfor %}
+	{% endif %}
+	</tbody>
+</table>
+
+{% endblock %}
