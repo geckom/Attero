@@ -42,7 +42,7 @@ from guardian.mixins import PermissionRequiredMixin, PermissionListMixin
 
 
 
-@login_required(login_url="login")
+@login_required()
 def Dashboard(request):
     open_projects = get_objects_for_user(request.user, 'attero.view_project').filter(status="open")
     completed_projects= get_objects_for_user(request.user, 'attero.view_project').filter(status='closed').count
@@ -69,7 +69,7 @@ def Dashboard(request):
     }
     return render(request, 'pages/dashboard.html', context)
 
-@login_required(login_url="login")
+@login_required()
 def Settings(request):
     context = {}
     return render(request, 'pages/settings.html', context)
@@ -77,7 +77,7 @@ def Settings(request):
 
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
-@login_required(login_url="login")
+@login_required()
 def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
@@ -96,7 +96,7 @@ def change_password(request):
 
 from .forms import UserChangeForm
 
-@login_required(login_url="login")
+@login_required()
 def profile(request):
     user = request.user
     if request.method == 'POST':
@@ -126,7 +126,7 @@ def TaskList(request):
 
 
 
-@login_required(login_url="login")
+@login_required()
 class IndexView(generic.ListView):
     template_name = 'pages/index.html'
     context_object_name = 'latest_note_list'
@@ -136,7 +136,7 @@ class IndexView(generic.ListView):
         return Note.objects.order_by('-pub_date')[:5]
 
 
-#@login_required(login_url="login")
+#@login_required()
 class ProjectList(LoginRequiredMixin, PermissionListMixin, ListView):
     permission_required = 'attero.view_project'
     template_name = "project/list.html"
@@ -167,7 +167,7 @@ class ProjectUpdate(LoginRequiredMixin, UpdateView):
         context['project_id'] = self.object.id
         return context
 
-@login_required(login_url="login")
+@login_required()
 def ProjectDelete(request, project_id):
     project = Project.objects.get(id=project_id)
     #note = get_object_or_404(Project, pk=note_id)
@@ -210,7 +210,7 @@ class ReportTemplateUpdate(LoginRequiredMixin, UpdateView):
         #context['project_id'] = 3
         return context
 
-@login_required(login_url="login")
+@login_required()
 def ReportTemplateDelete(request, report_template_id):
     reporttemplate = ReportTemplate.objects.get(id=report_template_id)
     #note = get_object_or_404(Project, pk=note_id)
@@ -230,7 +230,7 @@ def ReportTemplateDelete(request, report_template_id):
 
 
 
-@login_required(login_url="login")
+@login_required()
 def ProjectNoteCreate(request, project_id):
     
     if request.method == 'POST':
@@ -247,7 +247,7 @@ def ProjectNoteCreate(request, project_id):
 
 
 
-@login_required(login_url="login")
+@login_required()
 def ProjectNoteUpdate(request, project_id, note_id):
     note = Note.objects.get(pk=note_id)
     if request.method == 'POST':
@@ -264,7 +264,7 @@ def ProjectNoteUpdate(request, project_id, note_id):
     return render(request, 'note/form.html', { 'form': form, 'project_id': project_id})
 
 
-@login_required(login_url="login")
+@login_required()
 def ProjectNoteDelete(request, project_id, note_id):
     note = Note.objects.get(id=note_id)
     #note = get_object_or_404(Note, pk=note_id)
@@ -274,7 +274,7 @@ def ProjectNoteDelete(request, project_id, note_id):
     
 
 
-@login_required(login_url="login")
+@login_required()
 def ProjectNoteUpload(request, project_id):
     return render(request, 'note/upload.html', { 'project_id': project_id})
 
@@ -294,7 +294,7 @@ def ProjectTaskList(request, project_id):
     return render(request, 'task/list.html', { 'tasks': tasks, 'project_id': project_id})
 
 
-@login_required(login_url="login")
+@login_required()
 def ProjectTaskCreate(request, project_id):
     
     if request.method == 'POST':
@@ -309,7 +309,7 @@ def ProjectTaskCreate(request, project_id):
         form = TaskForm(project_id, initial={'project':project_id})
     return render(request, 'task/form.html', { 'form': form, 'project_id': project_id})
 
-@login_required(login_url="login")
+@login_required()
 def ProjectTaskUpdate(request, project_id, task_id):
     task = Task.objects.get(pk=task_id)
     if request.method == 'POST':
@@ -325,7 +325,7 @@ def ProjectTaskUpdate(request, project_id, task_id):
         form = TaskForm(project_id, instance=task)
     return render(request, 'task/form.html', { 'form': form, 'project_id': project_id})
 
-@login_required(login_url="login")
+@login_required()
 def ProjectTaskDelete(request, project_id, note_id):
     note = Note.objects.get(id=note_id)
     #note = get_object_or_404(Note, pk=note_id)
@@ -341,7 +341,7 @@ import re
 from django.conf import settings
 
 
-@login_required(login_url="login")
+@login_required()
 def ProjectReport(request, project_id):
     project = Project.objects.get(id=project_id)
     notes = Note.objects.filter(project=project, report=True)
@@ -409,7 +409,7 @@ def ProjectReport(request, project_id):
 from mptt.templatetags.mptt_tags import cache_tree_children
 from django.http import HttpResponse
 
-@login_required(login_url="login")
+@login_required()
 def noteMenu(request, project_id):
     project = Project.objects.get(id=project_id)
     root_nodes = cache_tree_children(Note.objects.filter(project=project))
