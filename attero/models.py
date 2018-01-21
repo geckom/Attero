@@ -26,7 +26,7 @@ class Project(models.Model):
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='open')
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    report_template = models.ForeignKey(ReportTemplate, on_delete=models.DO_NOTHING, null=True)
+    report_template = models.ForeignKey(ReportTemplate, on_delete=models.DO_NOTHING, null=True, blank=True)
 
     def __str__(self):
         return self.title
