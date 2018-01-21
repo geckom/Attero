@@ -42,13 +42,6 @@ from guardian.mixins import PermissionRequiredMixin, PermissionListMixin
 
 
 
-
-def Home(request):
-    template = loader.get_template('pages/home.html')
-    context = {}
-    return HttpResponse(template.render(context, request))
-
-
 @login_required(login_url="login")
 def Dashboard(request):
     open_projects = get_objects_for_user(request.user, 'attero.view_project').filter(status="open")

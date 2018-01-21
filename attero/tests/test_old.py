@@ -11,6 +11,62 @@ from guardian.shortcuts import assign_perm
 from ..models import Project, Note, Task
 
 
+class SettingsTests(TestCase):
+    def test_settings_page(self):
+        test_user1 = User.objects.create_user(username='testuser1', password='12345')
+        test_user1.save()
+
+        login = self.client.login(username='testuser1', password='12345')
+        resp = self.client.get(reverse('task-list'))
+
+        #Check our user is logged in
+        self.assertEqual(str(resp.context['user']), 'testuser1')
+        #Check that we got a response "success"
+        self.assertEqual(resp.status_code, 200)
+
+        # Goto the settings page
+        resp = self.client.get(reverse('settings'))
+        #Check we used correct template
+        self.assertTemplateUsed(resp, 'pages/settings.html')
+
+class ChangePasswordTests(TestCase):
+    def test_changepassword_page(self):
+        test_user1 = User.objects.create_user(username='testuser1', password='12345')
+        test_user1.save()
+
+        login = self.client.login(username='testuser1', password='12345')
+        resp = self.client.get(reverse('task-list'))
+
+        #Check our user is logged in
+        self.assertEqual(str(resp.context['user']), 'testuser1')
+        #Check that we got a response "success"
+        self.assertEqual(resp.status_code, 200)
+
+        # Goto the settings page
+        resp = self.client.get(reverse('password'))
+        #Check we used correct template
+        self.assertTemplateUsed(resp, 'registration/password.html')
+
+
+
+class ProfileTests(TestCase):
+    def test_profile_page(self):
+        test_user1 = User.objects.create_user(username='testuser1', password='12345')
+        test_user1.save()
+
+        login = self.client.login(username='testuser1', password='12345')
+        resp = self.client.get(reverse('task-list'))
+
+        #Check our user is logged in
+        self.assertEqual(str(resp.context['user']), 'testuser1')
+        #Check that we got a response "success"
+        self.assertEqual(resp.status_code, 200)
+
+        # Goto the settings page
+        resp = self.client.get(reverse('profile'))
+        #Check we used correct template
+        self.assertTemplateUsed(resp, 'registration/profile.html')
+
 
 class NoteModelTest(TestCase):
 
