@@ -160,6 +160,6 @@ class ProjectCreateTests(TestCase):
         }
         response = self.client.post(reverse('project-add'), formdata)
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
 
