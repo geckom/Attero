@@ -127,6 +127,7 @@ STATIC_URL = '/static/'
 
 
 LOGIN_REDIRECT_URL = 'dashboard'
+LOGIN_URL = '/login'
 
 
 SUMMERNOTE_CONFIG = {
