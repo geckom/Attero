@@ -1,13 +1,12 @@
 {% load custom_tags %}
 {% load mptt_tags %}
 
-{% recursetree nodes %}
-<li>
-    <a href='{% url "project-note-update" project_id=node.project.id note_id=node.id %}'>{{ node.title }}</a>
-    {% if not node.is_leaf_node %}
-        <ul class="children">
-            {{ children }}
-        </ul>
-    {% endif %}
-</li>
-{% endrecursetree %}
+
+{% load staticfiles %}
+<script src="{% static 'js/tree.jquery.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/jqtree.css' %}">
+<script src="{% static 'js/note-menu.js' %}"></script>
+
+
+<div id="tree1" data-url="{% url "note-menu" project_id=project_id %}"></div>
+

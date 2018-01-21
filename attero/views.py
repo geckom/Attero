@@ -412,6 +412,45 @@ def ProjectReport(request, project_id):
 
 
 
+
+from mptt.templatetags.mptt_tags import cache_tree_children
+from django.http import HttpResponse
+
+@login_required(login_url="login")
+def noteMenu(request, project_id):
+    project = Project.objects.get(id=project_id)
+    root_nodes = cache_tree_children(Note.objects.filter(project=project))
+    dicts = []
+    for n in root_nodes:
+        dicts.append(recursive_node_to_dict(n))
+
+    return HttpResponse(json.dumps(dicts, indent=4), content_type='application/json')
+
+import json
+
+
+def recursive_node_to_dict(node):
+    result = {
+        'id': node.pk,
+        'name': node.title,
+        'url': reverse('project-note-update', kwargs={'project_id': node.project.id, 'note_id': node.pk}),
+
+    }
+    children = [recursive_node_to_dict(c) for c in node.get_children()]
+    if children:
+        result['children'] = children
+    return result
+
+
+
+
+
+
+
+
+
+
+
 class NoteList(LoginRequiredMixin, ListView):
     model = Note
 

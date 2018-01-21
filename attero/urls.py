@@ -37,6 +37,7 @@ urlpatterns = [
     path('project/<int:project_id>/task/<int:task_id>/update', views.ProjectTaskUpdate, name='project-task-update'),
     path('project/<int:project_id>/task/<int:task_id>/delete', views.ProjectTaskDelete, name='project-task-delete'),
 
+    path('json/notes/<int:project_id>/', views.noteMenu, name='note-menu'),
     path('notes', views.NoteList.as_view(), name='note-list'),
     path('note/add/', views.NoteCreate.as_view(), name='note-add'),
     path('note/<int:pk>/', views.NoteUpdate.as_view(), name='note-update'),

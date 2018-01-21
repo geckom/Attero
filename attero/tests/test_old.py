@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 
 from guardian.shortcuts import assign_perm
 
-from .models import Project, Note, Task
+from ..models import Project, Note, Task
 
 
 class ProjectModelTest(TestCase):

@@ -9,10 +9,19 @@ from ..models import Project,Note
 def to_class_name(value):
     return value.__class__.__name__
 
+
+
 @register.inclusion_tag('modules/notemenu.html')
 def show_notes(Project):
-    notedata = Note.objects.filter(project=Project)
-    return {'nodes': notedata}
+    return {'project_id': Project}
+    #root_nodes = cache_tree_children(Note.objects.filter(project=Project))
+    #dicts = []
+    #for n in root_nodes:
+    #    dicts.append(recursive_node_to_dict(n))
+    #return {'nodes': json.dumps(dicts, indent=4)}
+
+    #notedata = Note.objects.filter(project=Project)
+    #return {'nodes': notedata}
 
 @register.inclusion_tag('modules/projectdata.html')
 def project_data(project_id):
