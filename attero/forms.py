@@ -8,6 +8,7 @@ from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
 from .models import Note
 from .models import Project
 from .models import Task
+from .models import NoteTemplate
 
 class NoteForm(ModelForm):
     def __init__(self, project_id, *args, **kwargs):
@@ -18,6 +19,19 @@ class NoteForm(ModelForm):
         model = Note
         exclude = ('pub_date',)
         #fields = ['title', 'note', 'project', 'parent']
+        widgets = {
+                'note': SummernoteWidget(),
+            }
+
+class TemplateForm(ModelForm):
+#    def __init__(self, *args, **kwargs):
+#        super(TemplateForm, self).__init__(*args, **kwargs)
+#        self.fields["parent"].queryset = Note.objects()
+
+    class Meta:
+        model = NoteTemplate
+        exclude = ('pub_date',)
+        #fields = ['title', 'note', 'parent']
         widgets = {
                 'note': SummernoteWidget(),
             }

@@ -23,3 +23,9 @@ admin.site.register(Task)
 
 from .models import ReportTemplate
 admin.site.register(ReportTemplate)
+
+
+from .models import NoteTemplate
+class NoteTemplateAdmin(MPTTModelAdmin, SummernoteModelAdmin):
+    summer_note_fields = ('note',)
+admin.site.register(NoteTemplate, NoteTemplateAdmin)

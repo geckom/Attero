@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}List Template{% endblock %}
+
+{% block content %}
+{% load custom_tags %}
+
+<table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+	<thead>
+	<tr>
+		<th>Title</th>
+	</tr>
+	</thead>
+	<tbody>
+	{% for template in object_list %}
+	<tr>
+		<td class="title"><a href="{% url "template-update" pk=template.id %}">{{ template.title }}</a></td>
+	</tr>
+	{% endfor %}
+	</tbody>
+</table>
+
+{% endblock %}

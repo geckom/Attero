@@ -37,6 +37,11 @@ urlpatterns = [
     path('project/<int:project_id>/task/<int:task_id>/update', views.ProjectTaskUpdate, name='project-task-update'),
     path('project/<int:project_id>/task/<int:task_id>/delete', views.ProjectTaskDelete, name='project-task-delete'),
 
+    path('templates', views.TemplateList.as_view(), name='template-list'),
+    path('template/add/', views.TemplateCreate.as_view(), name='template-add'),
+    path('template/<int:pk>/', views.TemplateUpdate.as_view(), name='template-update'),
+    path('template/<int:template_id>/delete', views.TemplateDelete, name='template-delete'),
+
     path('json/notes/<int:project_id>/', views.noteMenu, name='note-menu'),
     path('notes', views.NoteList.as_view(), name='note-list'),
     path('note/add/', views.NoteCreate.as_view(), name='note-add'),

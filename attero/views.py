@@ -26,9 +26,11 @@ from .models import Note
 from .models import Project
 from .models import Task
 from .models import ReportTemplate
+from .models import NoteTemplate
 
 from .forms import NoteForm
 from .forms import TaskForm
+from .forms import TemplateForm
 
 from django.contrib import messages
 
@@ -434,6 +436,62 @@ def recursive_node_to_dict(node):
         result['children'] = children
     return result
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#@login_required()
+class TemplateList(LoginRequiredMixin, ListView):
+    #permission_required = 'attero.view_project'
+    template_name = "template/list.html"
+    model = NoteTemplate
+    form_class = TemplateForm
+    
+
+class TemplateCreate(LoginRequiredMixin, CreateView):
+    template_name = "template/form.html"
+    form_class = TemplateForm
+    model = NoteTemplate
+    #fields = ['title', 'note']
+    success_url = reverse_lazy('template-list')
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        template = form.save()
+        return super().form_valid(form)
+
+class TemplateUpdate(LoginRequiredMixin, UpdateView):
+    template_name = "template/form.html"
+    model = NoteTemplate
+    form_class = TemplateForm
+    #fields = ['title', 'note']
+    success_url = reverse_lazy('template-list')
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        # context['project_id'] = self.object.id
+        return context
+
+@login_required()
+def TemplateDelete(request, project_id):
+    template = NoteTemplate.objects.get(id=template_id)
+    template.delete()
+    messages.success(request, 'Your template was successfully delete!')
+    return HttpResponseRedirect(reverse('template-list'))
 
 
 

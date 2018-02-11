@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% load custom_tags %}
+
+{% block title %}
+{% if object.id %}Edit{% else %}Add{% endif %} Template
+{% endblock %}
+
+
+{% block content %}
+<form role="form" method="post" action="{{ action }}">
+	{% csrf_token %}
+	{% if form.non_field_errors %}
+	<ul>
+		{% for error in form.non_field_errors %}
+		<li>{{ error }}</li>
+		{% endfor %}
+	</ul>
+	{% endif %}
+	{% for field in form %}
+		<div class="form-group">
+			<div>
+				{% if field.name == 'note'%}
+				{{ field.label_tag }} <br />{{ field }}
+				{% elif field.name == '_ref_node_id' %}
+				{{ field.label_tag}} {{ field|filterproject:project_id|addclass:'form-control' }}
+				{% else %}
+				{{ field.label_tag }} {{ field|addclass:'form-control' }}
+				{% endif %}
+			</div>
+			<div id="{{ field.auto_id }}_errors">
+				{{ field.errors }}
+			</div>
+		</div>
+	{% endfor %}
+	<button type="submit" class="btn btn-success">Save</button>
+	{% if form.initial.id %}
+	<a href="{% url "template-delete" template_id=form.initial.id %}" class="btn btn-danger" role="button">Delete</a>
+	{% endif %}
+</form>
+{% endblock %}

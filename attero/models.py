@@ -69,4 +69,18 @@ class Task(MPTTModel):
 
 
 
+class NoteTemplate(MPTTModel):
+    title = models.CharField(max_length=255)
+    note = models.TextField()
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True,on_delete=models.CASCADE)
+    added = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+    class MPTTMeta:
+        order_insertion_by = ['title']
+
+
 
