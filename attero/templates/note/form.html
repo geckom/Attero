@@ -16,13 +16,14 @@
 	<div class="pull-right form-inline">
 
 		<select class="form-control" id="template">
+		<option></option>
 		    {% for node,structure in form.templates|tree_info:"ancestors" %}
 		        {% if node.is_child_node %}
 		            <option value="{{ node.pk }}">
 		                {{ structure.ancestors|tree_path }} :: {{ node }}
 		            </option>
 			{% else %}
-				<option> {{ node }} </option>
+				<option value="{{ node.pk }}"> {{ node }} </option>
 		        {% endif %}
 		    {% endfor %}
 		</select>
@@ -86,6 +87,7 @@
         success: function (data) {
 		data = JSON.parse(data);
 		$("#id_note").summernote("pasteHTML", data[0].fields.note);
+		$("#template").val('');
         }
       });
 
