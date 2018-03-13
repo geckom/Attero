@@ -7,8 +7,22 @@
 {% endblock %}
 
 
+{% block submenu %}
+{% if project_id %}
+                         <div class="pull-right">
+                                <div class="btn-group">
+
+	<button type="button" class="btn btn-success"  onclick="document.getElementById('noteform').submit();">Save</button>
+	{% if form.initial.id %}
+	<a href="{% url "project-note-delete" project_id=project_id note_id=form.initial.id %}" class="btn btn-danger" role="button" onclick="return confirm('Are you sure you want to delete this note?');">Delete</a>
+	{% endif %}
+                                </div>
+                            </div>
+{% endif %}
+{% endblock %}
+
 {% block content %}
-<form role="form" method="post" action="{{ action }}">
+<form role="form" method="post" action="{{ action }}" id="noteform">
 	{% csrf_token %}
 	{% if form.non_field_errors %}
 	<ul>
@@ -33,9 +47,11 @@
 			</div>
 		</div>
 	{% endfor %}
+<!--
 	<button type="submit" class="btn btn-success">Save</button>
 	{% if form.initial.id %}
 	<a href="{% url "project-note-delete" project_id=project_id note_id=form.initial.id %}" class="btn btn-danger" role="button">Delete</a>
 	{% endif %}
+-->
 </form>
 {% endblock %}
