@@ -16,7 +16,7 @@ class NoteForm(ModelForm):
         super(NoteForm, self).__init__(*args, **kwargs)
         self.fields["parent"].queryset = Note.objects.filter(project=project_id)
         self.fields['project'].widget = HiddenInput()
-        self.templates = NoteTemplate.objects.filter()
+        self.templates = NoteTemplate.objects.all()
 
     class Meta:
         model = Note

@@ -9,21 +9,31 @@
 
 {% block submenu %}
 {% if project_id %}
-                         <div class="pull-right">
-    				     <select class="form-control" id="template">
-					     <option></option>
-					 {% for template in form.templates %}
-					 <option value="{{ template.id }}">{{ template.title }}</option>
-					 {% endfor %}
-				 </select>
-                                <div class="btn-group">
 
-	<button type="button" class="btn btn-success"  onclick="document.getElementById('noteform').submit();">Save</button>
-	{% if form.initial.id %}
-	<a href="{% url "project-note-delete" project_id=project_id note_id=form.initial.id %}" class="btn btn-danger" role="button" onclick="return confirm('Are you sure you want to delete this note?');">Delete</a>
-	{% endif %}
-                                </div>
-                            </div>
+{% load mptt_tags %}
+
+
+	<div class="pull-right form-inline">
+
+		<select class="form-control" id="template">
+		    {% for node,structure in form.templates|tree_info:"ancestors" %}
+		        {% if node.is_child_node %}
+		            <option value="{{ node.pk }}">
+		                {{ structure.ancestors|tree_path }} :: {{ node }}
+		            </option>
+			{% else %}
+				<option> {{ node }} </option>
+		        {% endif %}
+		    {% endfor %}
+		</select>
+
+		<div class="btn-group">
+			<button type="button" class="btn btn-success"  onclick="document.getElementById('noteform').submit();">Save</button>
+			{% if form.initial.id %}
+			<a href="{% url "project-note-delete" project_id=project_id note_id=form.initial.id %}" class="btn btn-danger" role="button" onclick="return confirm('Are you sure you want to delete this note?');">Delete</a>
+			{% endif %}
+		</div>
+	</div>
 {% endif %}
 {% endblock %}
 
