@@ -11,6 +11,12 @@
 {% bootstrap_css %}
 {% bootstrap_javascript %}
 
+<script src="{% static 'summernote/summernote.min.js'%}"></script>
+<script src="{% static 'js/summernote-ext-checkbox.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static "summernote/summernote.css" %}">
+<link rel="stylesheet" type="text/css" href="{% static "summernote/django_summernote.css" %}">
+
+
 {# Display django.contrib.messages as Bootstrap alerts #}
 {% bootstrap_messages %}
 
@@ -143,7 +149,6 @@
                         <li>
 				<a href="#"><i class="fa fa-clock-o fa-fw"></i> Time Entry</a>
                         </li>
--->
                         <li>
 				<a href="{% url "task-list" %}"><i class="fa fa-check-square-o fa-fw"></i> All Tasks</a>
                         </li>
@@ -154,6 +159,7 @@
 				</ul>
 			</li>
 			<li>&nbsp;</li>
+-->
 		    </ul>
 		    {% if project_id %}
 			<div class="panel panel-info">

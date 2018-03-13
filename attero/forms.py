@@ -16,13 +16,14 @@ class NoteForm(ModelForm):
         super(NoteForm, self).__init__(*args, **kwargs)
         self.fields["parent"].queryset = Note.objects.filter(project=project_id)
         self.fields['project'].widget = HiddenInput()
+        self.templates = NoteTemplate.objects.filter()
 
     class Meta:
         model = Note
         exclude = ('pub_date',)
         #fields = ['title', 'note', 'project', 'parent']
         widgets = {
-                'note': SummernoteWidget(),
+                'note': SummernoteInplaceWidget(),
             }
 
 class TemplateForm(ModelForm):
@@ -35,7 +36,7 @@ class TemplateForm(ModelForm):
         exclude = ('pub_date',)
         #fields = ['title', 'note', 'parent']
         widgets = {
-                'note': SummernoteWidget(),
+                'note': SummernoteInplaceWidget(),
             }
 
 class TaskForm(ModelForm):

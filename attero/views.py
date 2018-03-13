@@ -493,6 +493,18 @@ def TemplateDelete(request, project_id):
     messages.success(request, 'Your template was successfully delete!')
     return HttpResponseRedirect(reverse('template-list'))
 
+from django.http import JsonResponse
+from django.core import serializers
+def JSONNoteTemplate(request):
+    template_id = request.GET.get('template_id', None)
+    data = {}
+    if(template_id):
+        obj = NoteTemplate.objects.get(id=template_id)
+        data = serializers.serialize("json", [obj], fields=('title', 'note'))
+
+    return JsonResponse(data, safe=False)
+
+
 
 
 

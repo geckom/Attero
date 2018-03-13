@@ -10,6 +10,12 @@
 {% block submenu %}
 {% if project_id %}
                          <div class="pull-right">
+    				     <select class="form-control" id="template">
+					     <option></option>
+					 {% for template in form.templates %}
+					 <option value="{{ template.id }}">{{ template.title }}</option>
+					 {% endfor %}
+				 </select>
                                 <div class="btn-group">
 
 	<button type="button" class="btn btn-success"  onclick="document.getElementById('noteform').submit();">Save</button>
@@ -56,4 +62,23 @@
 	{% endif %}
 -->
 </form>
+
+  <script>
+    $("#template").change(function () {
+      var template_id = $(this).val();
+
+      $.ajax({
+        url: '/template/json',
+        data: {
+          'template_id': template_id
+        },
+        dataType: 'json',
+        success: function (data) {
+		data = JSON.parse(data);
+		$("#id_note").summernote("pasteHTML", data[0].fields.note);
+        }
+      });
+
+    });
+  </script>
 {% endblock %}

@@ -144,12 +144,19 @@ SUMMERNOTE_CONFIG = {
     'js': (
         '/static/js/summernote-ext-checkbox.js',
     ),
+    'iframe': False,
+        'default_js': (
+        os.path.join(STATIC_URL, 'django_summernote/jquery.ui.widget.js'),
+        os.path.join(STATIC_URL, 'django_summernote/jquery.iframe-transport.js'),
+        os.path.join(STATIC_URL, 'django_summernote/jquery.fileupload.js'),
+        os.path.join(STATIC_URL, 'django_summernote/summernote.min.js'),
+    ),
     'toolbar': [
         ['style', ['style']],
         ['style', ['bold', 'italic', 'underline', 'clear']],
         ['para', ['ul', 'ol', 'height']],
         ['insert', ['link', 'checkbox', 'picture', 'link', 'table']],
-        ['misc', ['undo', 'redo', 'help']]
+        ['misc', ['undo', 'redo', 'help', 'fullscreen']]
     ],
 }
 

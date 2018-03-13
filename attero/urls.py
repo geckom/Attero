@@ -41,6 +41,7 @@ urlpatterns = [
     path('template/add/', views.TemplateCreate.as_view(), name='template-add'),
     path('template/<int:pk>/', views.TemplateUpdate.as_view(), name='template-update'),
     path('template/<int:template_id>/delete', views.TemplateDelete, name='template-delete'),
+    path('template/json', views.JSONNoteTemplate, name='template-get'),
 
     path('json/notes/<int:project_id>/', views.noteMenu, name='note-menu'),
     path('notes', views.NoteList.as_view(), name='note-list'),
