@@ -140,6 +140,17 @@ SUMMERNOTE_CONFIG = {
         '/static/js/jquery.min.js',
         '/static/js/bootstrap.min.js',
     ),
+    'styleWithSpan': False,
+    'js': (
+        '/static/js/summernote-ext-checkbox.js',
+    ),
+    'toolbar': [
+        ['style', ['style']],
+        ['style', ['bold', 'italic', 'underline', 'clear']],
+        ['para', ['ul', 'ol', 'height']],
+        ['insert', ['link', 'checkbox', 'picture', 'link', 'table']],
+        ['misc', ['undo', 'redo', 'help']]
+    ],
 }
 
 BOOTSTRAP3 = {
