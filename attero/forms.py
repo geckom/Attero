@@ -12,8 +12,10 @@ from .models import NoteTemplate
 
 class NoteForm(ModelForm):
     def __init__(self, project_id, *args, **kwargs):
+        from django.forms.widgets import HiddenInput
         super(NoteForm, self).__init__(*args, **kwargs)
         self.fields["parent"].queryset = Note.objects.filter(project=project_id)
+        self.fields['project'].widget = HiddenInput()
 
     class Meta:
         model = Note

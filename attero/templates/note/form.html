@@ -38,7 +38,9 @@
 				{{ field.label_tag }} <br />{{ field }}
 				{% elif field.name == '_ref_node_id' %}
 				{{ field.label_tag}} {{ field|filterproject:project_id|addclass:'form-control' }}
-				{% else %}
+				{% elif field.field.widget.input_type == 'checkbox' %}
+				{{ field.label_tag }} {{field|addclass:'' }}
+				{% elif field.is_hidden != True %}
 				{{ field.label_tag }} {{ field|addclass:'form-control' }}
 				{% endif %}
 			</div>
