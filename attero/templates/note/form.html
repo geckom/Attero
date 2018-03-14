@@ -3,7 +3,7 @@
 {% load custom_tags %}
 
 {% block title %}
-{% if object.id %}Edit{% else %}Add{% endif %} Note
+{% if form.initial.id != None %}Edit{% else %}Add{% endif %} Note
 {% endblock %}
 
 
@@ -14,7 +14,7 @@
 
 
 	<div class="pull-right form-inline">
-
+		{% if form.initial.id == None %}
 		<select class="form-control" id="template">
 		<option></option>
 		    {% for node,structure in form.templates|tree_info:"ancestors" %}
@@ -27,6 +27,7 @@
 		        {% endif %}
 		    {% endfor %}
 		</select>
+		{% endif %}
 
 		<div class="btn-group">
 			<button type="button" class="btn btn-success"  onclick="document.getElementById('noteform').submit();">Save</button>
