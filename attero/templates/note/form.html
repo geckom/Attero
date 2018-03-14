@@ -91,6 +91,7 @@
 		data = JSON.parse(data);
 		console.log(data[0].fields.note);
 		$("#id_note").summernote("code", data[0].fields.note);
+		$("#id_title").val(data[0].fields.title);
 		$("#template").val('');
         }
       });
