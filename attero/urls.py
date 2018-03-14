@@ -26,6 +26,8 @@ urlpatterns = [
     path('project/<int:pk>/', views.ProjectUpdate.as_view(), name='project-update'),
     path('project/<int:project_id>/delete', views.ProjectDelete, name='project-delete'),
     path('project/<int:project_id>/report', views.ProjectReport, name='project-report'),
+    path('project/<int:project_id>/export', views.ProjectExport, name='project-export'),
+    path('project/import', views.ProjectImport, name='project-import'),
 
     path('project/<int:project_id>/note/add', views.ProjectNoteCreate, name='project-note-add'),
     path('project/<int:project_id>/note/<int:note_id>/update', views.ProjectNoteUpdate, name='project-note-update'),

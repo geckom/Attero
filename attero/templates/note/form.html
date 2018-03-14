@@ -57,7 +57,9 @@
 				{{ field.label_tag}} {{ field|filterproject:project_id|addclass:'form-control' }}
 				{% elif field.field.widget.input_type == 'checkbox' %}
 				{{ field.label_tag }} {{field|addclass:'' }}
-				{% elif field.is_hidden != True %}
+				{% elif field.is_hidden == True %}
+				{{ field }}
+				{% else %}
 				{{ field.label_tag }} {{ field|addclass:'form-control' }}
 				{% endif %}
 			</div>
@@ -86,7 +88,8 @@
         dataType: 'json',
         success: function (data) {
 		data = JSON.parse(data);
-		$("#id_note").summernote("pasteHTML", data[0].fields.note);
+		console.log(data[0].fields.note);
+		$("#id_note").summernote("code", data[0].fields.note);
 		$("#template").val('');
         }
       });
