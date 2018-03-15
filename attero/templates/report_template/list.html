@@ -1,6 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %}List Report Templates{% endblock %}
+{% block title %}Manage Report Templates{% endblock %}
+
+{% block submenu %}
+	<div class="pull-right form-inline">
+		<div class="btn-group">
+			<a href="{% url "report-template-add" %}" class="btn btn-success" role="button"><i class="fa fa-plus"></i> Add</a>
+		</div>
+	</div>
+{% endblock %}
+
 
 {% block content %}
 {% load custom_tags %}

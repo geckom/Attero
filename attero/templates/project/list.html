@@ -1,6 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %}List Projects{% endblock %}
+{% block title %}Manage Projects{% endblock %}
+
+{% block submenu %}
+	<div class="pull-right form-inline">
+		<div class="btn-group">
+			<a href="{% url "project-add" %}" class="btn btn-success" role="button"><i class="fa fa-plus"></i> Add</a>
+			<a href="{% url "project-import" %}" class="btn btn-info" role="button"><i class="fa fa-cloud-upload"></i> Import</a>
+		</div>
+	</div>
+{% endblock %}
 
 {% block content %}
 {% load custom_tags %}
@@ -12,6 +21,7 @@
 		<th>Client</th>
 		<th>Short Name</th>
 		<th>Status</th>
+		<th>Actions</th>
 	</tr>
 	</thead>
 	<tbody>
@@ -24,6 +34,10 @@
 		<td class="client">{{ project.client_name }}</td>
 		<td class="shortname">{{ project.short_name }}</td>
 		<td>{{ project.status }}</td>
+		<td>
+			<a href="{% url "project-export" project_id=project.id %}" class="btn btn-info btn-circle"><i class="fa fa-cloud-download"></i></a>
+			<a href="{% url "project-delete" project_id=project.id %}" class="btn btn-danger btn-circle" onclick="return confirm('Are you sure you want to delete this project?');"><i class="fa fa-trash"></i></a>
+		</td>
 	</tr>
 	{% endfor %}
 	{% endif %}

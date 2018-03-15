@@ -65,7 +65,7 @@
             <ul class="nav navbar-top-links navbar-right">
 		<li class="dropdown">
 			<a href="{% url "dashboard" %}">
-			    <i class="fa fa-dashboard fa-fw"></i> Dashboard
+			    <i class="fa fa-home fa-fw"></i> Dashboard
 	            </a>
 		</li>
                 <li class="dropdown">
@@ -74,11 +74,10 @@
                     </a>
                     <ul class="dropdown-menu dropdown-user">
 			<li>
-                            <a href="{% url "project-add" %}"><i class="fa fa-plus-circle fa-fw"></i> Add Project</a>
+                            <a href="{% url "project-list" %}"><i class="fa fa-list fa-fw"></i> Manage Projects</a>
                         </li>
-			<li>
-                            <a href="{% url "project-list" %}"><i class="fa fa-list fa-fw"></i> List Projects</a>
-                        </li>
+			<li class="divider"></li>
+			{% projects_list%}
                     </ul>
                     <!-- /.dropdown-projects -->
                 </li>
@@ -88,24 +87,10 @@
                     </a>
                     <ul class="dropdown-menu dropdown-user">
 			<li>
-                            <a href="{% url "template-add" %}"><i class="fa fa-plus-circle fa-fw"></i> Add Template</a>
+                            <a href="{% url "template-list" %}"><i class="fa fa-list fa-fw"></i> Note Templates</a>
                         </li>
 			<li>
-                            <a href="{% url "template-list" %}"><i class="fa fa-list fa-fw"></i> List Templates</a>
-                        </li>
-                    </ul>
-                    <!-- /.dropdown-projects -->
-                </li>
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-folder-open fa-fw"></i> Report Templates <i class="fa fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-user">
-			<li>
-                            <a href="{% url "report-template-add" %}"><i class="fa fa-plus-circle fa-fw"></i> Add Report Template</a>
-                        </li>
-			<li>
-                            <a href="{% url "report-template-list" %}"><i class="fa fa-list fa-fw"></i> List Report Templates</a>
+                            <a href="{% url "report-template-list" %}"><i class="fa fa-list-alt fa-fw"></i> Report Templates</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-projects -->

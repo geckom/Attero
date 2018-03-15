@@ -83,13 +83,13 @@ def ProjectExport(request, project_id):
     }
 
 
-    response = HttpResponse(data, content_type="text/plain")
+    response = HttpResponse(data, content_type="text/plain; charset=UTF-8")
     response['Content-Disposition'] = 'attachment; filename=project.json'
     return response
 #return render(request, 'project/export.html', context)
 
 
-from django.core.files.storage import FileSystemStorage
+from django.db import transaction
 
 @login_required()
 def ProjectImport(request):
@@ -97,42 +97,50 @@ def ProjectImport(request):
     if request.method == 'POST' and request.FILES['myfile']:
 
         myfile = request.FILES['myfile']
-        fs = FileSystemStorage()
-        filename = fs.save(myfile.name, myfile)
+        #fs = FileSystemStorage()
+        #filename = fs.save(myfile.name, 'uploads/projects/'+myfile)
 	#uploaded_file_url = fs.url(filename)
-        data =filename
-        with open(filename) as f:
-            data = f.read()
+        #data =filename
+        jsondata = myfile.read().decode('utf-8')
+        #with open(myfile) as f:
+        #    data = f.read()
 
         project_id = 0
         new_project = None
         id_mapping = {}
-        for obj in serializers.deserialize("json", data):
-            if isinstance(obj.object, Project):
-                data += "Insert project: " + str(obj.object.pk) + ":" + str(obj.object) + "\n"
-                obj.object.pk = None
-                obj.object.save()
-                project_id = obj.object.pk
-                new_project = obj.object
-                data += "New Project ID: " + str(project_id) + "\n"
-            elif isinstance(obj.object, Note):
-                data += "======================\n"
-                data += "Insert note: " + str(obj.object.title) + "\n"
-                old_id = obj.object.pk
-                obj.object.pk = None
-                obj.object.project = new_project
-                #obj.object.tree_id = 0
-                del obj.object.tree_id
-                if obj.object.parent != None:
-                    if obj.object.parent in id_mapping:
-                        obj.object.parent = id_mapping[obj.object.parent]
-                        data += "parent id exists\n"
+        with transaction.atomic():
+            for obj in serializers.deserialize("json", jsondata):
+                if isinstance(obj.object, Project):
+                    data += "Insert project: " + str(obj.object.pk) + ":" + str(obj.object) + "\n"
+                    obj.object.pk = None
+                    obj.object.save()
+                    project_id = obj.object.pk
+                    new_project = obj.object
+                    data += "New Project ID: " + str(project_id) + "\n"
+                elif isinstance(obj.object, Note):
+                    data += "Insert note: " + str(obj.object.title) + "\n"
+                    importobj = obj.object.__dict__
 
-                obj.object.save()
-                new_id = obj.object.pk
-                id_mapping[old_id] = new_id
-                #data += "Note project: " + str(obj.object.project.id) + "\n"
-        data += str(id_mapping)
+                    new_parent = None
+                    if importobj['parent_id'] != None :
+                        if importobj['parent_id'] in id_mapping:
+                            #obj.object.parent = id_mapping[importobj['parent_id']]
+                            new_parent = id_mapping[importobj['parent_id']]
+
+                    newobj = Note(
+                            title= importobj['title'],
+                            note= importobj['note'],
+                            report= importobj['report'],
+                            project= new_project,
+                            parent= new_parent,
+                            added= importobj['added'],
+                            updated= importobj['updated'],
+                    )
+                    newobj.save()
+                    new_id = newobj.pk
+
+                    id_mapping[importobj['id']] = newobj
+        #data += str(id_mapping)
     
     context = {
             'data': data
