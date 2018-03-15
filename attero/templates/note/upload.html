@@ -1,42 +1,39 @@
 {% extends "base.html" %}
 
-{% load custom_tags %}
-
 {% block title %}
 Upload Note Data
 {% endblock %}
 
 
+
 {% block content %}
-<form role="form" method="post" action="{{ action }}">
-	{% csrf_token %}
-	UNDER CONTRUCTION
-	{% if form.non_field_errors %}
-	<ul>
-		{% for error in form.non_field_errors %}
-		<li>{{ error }}</li>
-		{% endfor %}
-	</ul>
-	{% endif %}
-	{% for field in form %}
-		<div class="form-group">
-			<div>
-				{% if field.name == 'note'%}
-				{{ field.label_tag }} <br />{{ field }}
-				{% elif field.name == '_ref_node_id' %}
-				{{ field.label_tag}} {{ field|filterproject:project_id|addclass:'form-control' }}
-				{% else %}
-				{{ field.label_tag }} {{ field|addclass:'form-control' }}
-				{% endif %}
-			</div>
-			<div id="{{ field.auto_id }}_errors">
-				{{ field.errors }}
-			</div>
-		</div>
-	{% endfor %}
-	<button type="submit" class="btn btn-success">Save</button>
-	{% if form.initial.id %}
-	<a href="{% url "project-note-delete" project_id=project_id note_id=form.initial.id %}" class="btn btn-danger" role="button">Delete</a>
-	{% endif %}
-</form>
+{% load custom_tags %}
+<pre>
+{{ data }}
+</pre>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="myfile">
+    <select name="import_type">
+	    {% for type in import_types %}
+	    <option>{{type}}</option>
+	    {% endfor %}
+    </select>
+    <select name="structure">
+	    {% for structure in data_structures %}
+	    <option>{{structure}}</option>
+	    {% endfor %}
+    </select>
+
+    <select name="parentid">
+    {% for choice in notes.choices %}
+    <option value="{{ choice.0 }}">{{ choice.1}}</option>
+    {% endfor %}
+    </select>
+
+    
+    <button type="submit">Upload</button>
+  </form>
+
 {% endblock %}

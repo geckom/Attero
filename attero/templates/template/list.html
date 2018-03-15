@@ -14,6 +14,21 @@
 {% block content %}
 {% load custom_tags %}
 
+{% load mptt_tags %}
+<ul>
+    {% recursetree object_list %}
+        <li>
+	    {{ node.title }} 
+	    <a href='{% url "template-update" pk=node.id %}'><i class="fa fa-edit fa-fw"></i></a>
+            {% if not node.is_leaf_node %}
+                <ul class="children">
+                    {{ children }}
+                </ul>
+            {% endif %}
+        </li>
+    {% endrecursetree %}
+</ul>
+<!--
 <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
 	<thead>
 	<tr>
@@ -28,5 +43,6 @@
 	{% endfor %}
 	</tbody>
 </table>
+-->
 
 {% endblock %}

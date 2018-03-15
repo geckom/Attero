@@ -77,9 +77,129 @@ def ProjectNoteDelete(request, project_id, note_id):
     
 
 
+from django.db import transaction
+from django.core import serializers
+import xmltodict
+from libnmap.parser import NmapParser
+from mptt.forms import TreeNodeChoiceField
+
 @login_required()
 def ProjectNoteUpload(request, project_id):
-    return render(request, 'note/upload.html', { 'project_id': project_id})
+    data = ''
+    # Output scan in normal, XML, s|<rIpt kIddi3, and Grepable format, respectively, to the given filename.
+    import_types = [
+            'Plain Text',
+            'Nmap'
+    ]
+    data_structures = [
+        'Raw Note Data',
+        'Folder Structure'
+    ]
+
+    #notes = Note.objects.filter(project=project_id)
+    notes = TreeNodeChoiceField(queryset=Note.objects.filter(project=project_id))
+
+    if request.method == 'POST' and request.FILES['myfile']:
+        myfile = request.FILES['myfile']
+        rawdata = myfile.read().decode('utf-8')
+    
+        import_type = request.POST.get('import_type')
+        structure = request.POST.get('structure')
+        parentid = request.POST.get('parentid')
+        if(parentid==''):
+            parentid = None
+        else:
+            parentid = Note.objects.get(id=parentid)
+
+        if( import_type =='Plain Text' and structure=='Raw Note Data'):
+            data = "Importing... " + str(myfile)
+            newnote = Note(
+                    title = str(myfile),
+                    note = "<br />".join(rawdata.split("\n")),
+                    project = Project.objects.get(id=project_id),
+                    parent = parentid
+            )
+            newnote.save()
+        elif( import_type == 'Nmap' and structure=='Raw Note Data'):
+            data = "Importing... " + str(myfile)
+            newnote = Note(
+                    title = str(myfile),
+                    note = "<pre>"+rawdata+"</pre>",
+                    project = Project.objects.get(id=project_id),
+                    parent = parentid
+            )
+            newnote.save()
+        elif( import_type == 'Nmap' and structure=='Folder Structure'):
+            nmap_report = NmapParser.parse_fromstring(rawdata)
+            data += "Nmap scan summary: {0}\n\n".format(nmap_report.summary)
+            with transaction.atomic():
+                for host in nmap_report.hosts:
+                    data += "Importing " + host.address + "\n"
+                    note = ''
+                    if len(host.hostnames)>0:
+                        note = "Hostnames: " + ", ".join(host.hostnames) + "\n"
+                    if host.mac != '':
+                        note += "MAC Address: " + host.mac + "\n"
+                    if host.vendor != '':
+                        note += "Vendor: " + host.vendor + "\n"
+                    if host.os_fingerprinted:
+                        note += "Operating System: " + str(host.os_match_probabilities()[0]) + "\n"
+                    if len(host.scripts_results)>0:
+                        note += "Scripts:\n"
+                        for script in host.scripts_results:
+                            note += str(script) + "\n"
+                    note += "Serivices:\n"
+                    for service in host.services:
+                        note += str(service.port) + "/" + str(service.protocol) + " " + service.state + "\n"
+                        if len(service.scripts_results)>0:
+                            for scripts in service.scripts_results:
+                                note += scripts['id'] + ":\n"
+                                note += str(scripts['output']) + "\n"
+                            
+                    #data += "======================\n" + note + "=======================\n"
+                    
+                    newhost = Note(
+                            project = Project.objects.get(id=project_id),
+                            title = host.address,
+                            note = "<br />".join(note.split("\n")),
+                            parent = parentid
+                    )
+                    newhost.save()
+
+
+                    data += "Ports " + ', '.join(str(i[0])+"/"+i[1] for i in host.get_ports()) + "\n\n"
+                    for service in host.services:
+                        title = str(service.port) + "/" + service.protocol + " " + service.service
+                        note = service.banner
+                        if len(service.scripts_results)>0:
+                            for scripts in service.scripts_results:
+                                note += scripts['id'] + ":\n"
+                                note += str(scripts['output']) + "\n"
+
+                    #for port in host.get_ports():
+                    #    service = host.get_service(port[0], port[1])
+                    #    title = str(port[0]) + "/" + port[1] + " " + str(service.service) + "\n"
+                        data += service.banner + "\n"
+
+                        newport = Note(
+                                project = Project.objects.get(id=project_id),
+                                title = title,
+                                note = "<br />".join(note.split("\n")),
+                                parent = newhost
+                        )
+                        newport.save()
+
+        else:
+            data = "Unable to import:\n" + rawdata
+
+    context = {
+            'project_id': project_id,
+            'import_types': import_types,
+            'data_structures': data_structures,
+            'notes': notes,
+            'data': data
+    }
+    return render(request, 'note/upload.html', context)
 
 
 
