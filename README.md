@@ -24,7 +24,7 @@ The installation:
 
 * Install the following packages "apt install python3 python3-django python3-pip"
 
-* Install the pip packages "pip3 -r requirements.txt"
+* Install the pip packages "pip3 install -r requirements.txt"
 
 ## Post-Installation : Getting Started
 
